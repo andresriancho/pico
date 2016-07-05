@@ -1,0 +1,6 @@
+requests
+plotly
+scipy
+numpy
+CodernityDB
+ctypes
