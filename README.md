@@ -1,7 +1,37 @@
-Time for valid token 224a93060c0dd4fb931d05083b4cb7b6a8c27df8 MUST be greater than all the other measurements.
+# Pico
 
-Time for fourth char OK 224a000000000000000000000000000000000000 MUST be greater than fourth char incorrect
+Tool to identify and exploit timing attacks.
 
-Time for fourth char incorrect 224c000000000000000000000000000000000000 MUST be greater than all chars incorrect
+## Install
 
-Time for all chars except first incorrect 0000000000000000000000000000000000000000 MUST be lower than all
+```
+virtualenv pico-venv
+source pico-venv/bin/activate
+
+git clone git@github.com:andresriancho/pico.git
+cd pico
+pip install -r requirements.txt
+```
+
+## Getting Timing Samples
+
+Please note that this tool is Linux-specific and requires root privileges
+to run due to the OS tricks implemented in the `os_utils.py` module.
+
+Edit the constants in `timing-collector.py` and then:
+
+```
+sudo -s -H
+source pico-venv/bin/activate
+
+cd pico
+python timing-collector.py sample-name
+```
+
+## Analyzing Samples
+
+Edit the token values in `graph-results.py` and then:
+
+```
+python graph-results.py sample-name
+```
