@@ -13,6 +13,11 @@ cd pico
 pip install -r requirements.txt
 ```
 
+## Starting Target Web Application
+
+Check the [django-rest-framework-timing](https://github.com/andresriancho/django-rest-framework-timing)
+repository for instructions on how to start a vulnerable application.
+
 ## Getting Timing Samples
 
 Please note that this tool is Linux-specific and requires root privileges
