@@ -48,6 +48,18 @@ previous_governors = None
 
 
 def setPowersave(enabled):
+    """
+    http://superuser.com/a/454104
+
+    Also mentioned in https://github.com/seecurity/mona-timing-lib
+    as "Disable Intel Speedstep"
+
+
+
+    :param enabled: Send powersave to scaling governor?
+    :return: None
+    """
+
     global previous_governors
     cpus = multiprocessing.cpu_count()
     if enabled:
