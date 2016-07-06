@@ -17,6 +17,7 @@ TOTAL_LENGTH = len(VALID_TOKEN_START) + len(VALID_TOKEN_GUESS)
 MISSING_CHAR_LENGTH = len(VALID_TOKEN_GUESS)
 
 PADDING_CHAR = '0'
+WARM_UP_COUNT = 100
 
 URL = 'http://127.0.0.1:8000/users/'
 NUM_SAMPLES = 10000
@@ -108,12 +109,32 @@ def send_requests(db, known_valid, test_case_1, test_case_2, missing_chars):
             progress(i, NUM_SAMPLES)
 
 
-def warm_up(token):
+def warm_up(valid_token_start, success, fail, missing_char_length):
     """
     Use different TCP/IP connections to warm up all the threads
     """
-    for i in xrange(20):
-        requests.get(URL, headers={'Authorization': 'Token %s' % token})
+    fail_token = generate_test_token(valid_token_start, fail,
+                                     missing_char_length)
+    success_token = generate_test_token(VALID_TOKEN_START, success,
+                                        missing_char_length)
+
+    for token in (fail_token, success_token):
+        for i in xrange(WARM_UP_COUNT):
+            # TODO: What happens if I want to send data? Do I need to add the
+            #       Content-Type header manually?
+            req = requests.Request('GET',
+                                   URL,
+                                   headers={'Authorization': 'Token %s' % token,
+                                            'Accept-Encoding': 'identity'}
+                                   )
+            prepared_request = req.prepare()
+
+            # Use different sessions/TCP connections to potentially warm up
+            # more/different caches
+            session = requests.Session()
+            session.send(prepared_request,
+                         allow_redirects=False,
+                         verify=False)
 
 
 def init_db():
@@ -147,13 +168,20 @@ if __name__ == '__main__':
     FAIL_3 = '1'
     SUCCESS = '8'
 
+    FAIL_TEST = FAIL_1
+    SUCCESS_TEST = SUCCESS
+
     tcpts_previous = False
 
     try:
         tcpts_previous = init_os_settings()
         db = init_db()
-        warm_up(generate_test_token(VALID_TOKEN_START, '0', MISSING_CHAR_LENGTH))
-        send_requests(db, VALID_TOKEN_START, FAIL_1, FAIL_2, MISSING_CHAR_LENGTH)
+
+        warm_up(VALID_TOKEN_START, SUCCESS_TEST, FAIL_TEST, MISSING_CHAR_LENGTH)
+
+        send_requests(db, VALID_TOKEN_START,
+                      SUCCESS_TEST, FAIL_TEST,
+                      MISSING_CHAR_LENGTH)
     except KeyboardInterrupt:
         print('')
         print('User pressed Ctrl+C.')
