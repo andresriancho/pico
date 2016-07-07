@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import requests
+import random
 import time
 import sys
 
@@ -91,7 +92,14 @@ def send_requests(db, known_valid, test_case_1, test_case_2, missing_chars):
         #
         tmp_results = {}
 
-        for j, token in enumerate((token_test_case_1, token_test_case_2)):
+        # Sending the HTTP requests in different order during sample capture is
+        # something recommended by Paul McMillan and Sebastian Schinzel, they
+        # recommend it because it might break some caches
+        shuffled_token_tests = [(0, token_test_case_1),
+                                (1, token_test_case_2)]
+        random.shuffle(shuffled_token_tests)
+
+        for j, token in shuffled_token_tests:
             response, naive_time = send_with_naive_timing(session, URL, token)
             tmp_results[j] = (response, naive_time, token)
 
