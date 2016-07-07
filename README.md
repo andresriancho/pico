@@ -2,6 +2,10 @@
 
 Tool to identify and exploit timing attacks.
 
+Timing attacks were a completely unknown field to me, so I took _a lot of notes_
+comparing previously developed tools, measurement and statistical analysis methods.
+The notes can be found in the [wiki](https://github.com/andresriancho/pico/wiki).
+
 ## Install
 
 ```
