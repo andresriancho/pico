@@ -77,7 +77,7 @@ def send_requests(db, known_valid, test_case_1, test_case_2, missing_chars):
                                             test_case_2,
                                             missing_chars)
 
-    print('Running test cases:')
+    print('Collecting %s samples for:' % NUM_SAMPLES * 2)
     print(' - %s' % token_test_case_1)
     print(' - %s' % token_test_case_2)
     print('')
